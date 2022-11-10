@@ -1,0 +1,99 @@
+một trong những lợi ích chính của việc sử dụng delegate là bạn có thể thay đổi chức năng
+được kích hoạt khi delegate được gọi
+
+ví dụ: bạn có thể thay đổi chức năng tấn công bằng cách sử dụng các phím số để chuyển đổi
+
+delegate có thể thực hiện nhiều chức năng cùng một lúc +=
+
+Cách tạo một hế thống với delegate trong unity
+
+Ví dụ: một kịch bản gọi GameOver khi health của Player < 0
+
+public class PlayerHealth : MonoBehaviour
+{
+    	float health=100;
+    
+    	public delegate void OnGameOver();
+	public static OnGameOver onGameOver;
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if(health < 0)
+        {
+            onGameOver?.Invoke();
+        }
+    }
+}
+
+public class GameController : MonoBehaviour
+{
+    void RestartGame()
+    { 
+        // Restart the game!
+    }
+    private void OnEnable()
+    {
+        PlayerHealth.onGameOver += RestartGame;
+    }
+}
+
+Trong ví dụ này nó cho phép GameController đăng kí RestartGame function với GameOver event mà không cần tham chiếu đến đối tượng Player
+Tuy nhiên vì điều này tạo ra một kết nối giữa hai tập lệnh, điều cực kỳ quan trọng là hủy đăng ký nếu nó không cần thiết nữa.
+
+Điều này có thể giúp bạn quản lý và xây dựng trò chơi của mình dễ dàng hơn nhiều. Tuy nhiên, bởi vì bất kỳ tập lệnh nào có thể truy cập vào delegate, về mặt
+kỹ thuật bất kỳ tập lệnh nào cũng có thể gọi nó hoặc thậm chí xóa các chức năng được chỉ định khỏi delegate.
+Bởi vì một trong những lợi ích chính của Observer Pattern là cho phép các tập lệnh phản hồi khi có điều gì đó xảy ra.
+
+Event chỉ có thể được kích hoạt từ trong chính class của chúng. Điều này có nghĩa là, các script khác chỉ có thể đăng ký hoặc hủy chức năng của nó mà ko thể kích hoạt hoặc
+thay đổi đăng ký của script khác. Điều này ngăn chặn một script khác làm một điều gì đó mà theo thiết kế bạn không muốn nó làm.
+
+Events so với Delegates
+
+Events có tính bảo mật cố hữu, vì chúng không thể được kích hoạt bởi các tập lệnh khác, bạn có thể tự hỏi tại sao bạn lại sử dụng một đại biểu cho một sự kiện.
+
+Delegates chỉ đơn giản là hoạt động như các vùng chứa dữ liệu cho các hàm.
+Trong khi đó, không có gì ngạc nhiên khi các sự kiện hoạt động tốt như một phần của hệ thống sự kiện, trong đó hành động của một đối tượng sẽ kích hoạt các tập lệnh khác phản hồi.
+Vì vậy, trong khi các sự kiện, về cơ bản chỉ là các đại biểu chuyên biệt, chúng phù hợp hơn với nhiệm vụ cụ thể này là kích hoạt một sự kiện mà các đối tượng quan sát khác sau đó có thể phản hồi nhưng không can thiệp vào.
+
+Điều này có thể hữu ích khi thiết kế tập lệnh của bạn theo cách dễ quản lý.
+
+Level 1:
+
+Cell: isBlocked
+
+Base: Soid,...
+
+Obstacle
+ * Block:
+ - value
+ - Sub_Length of Snake
+ - isBlock
+ * Water/Hole
+ - value
+ - Lose
+ * Saw
+ - Lose
+ - Cut tung phat
+
+Items:
+ * Food
+ - value = 1
+ - Add_Length of Snake
+ * Add
+ - value = 1, 2,...
+ - Add_Length of Snake
+ * Mul
+ - value = 1, 2, 3...
+ - Add_Length of Snake
+ * Sub
+ - value
+ - Sub_Length
+ * Diamond
+ - value
+
+FinishLine
+ - Position
+
+BlockMovement: Rock, Wood, Tree
+
+
